@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "skills": {
+    "simpleagents-builder": {
+      "source": "CraftsMan-Labs/SimpleAgents",
+      "sourceType": "github",
+      "skillPath": "skills/simpleagents-builder/SKILL.md",
+      "computedHash": "a82dbfb94f6e4a9bdcec9099a864fc16cad60b978441ed2b6a3423119067fea3"
+    }
+  }
+}
