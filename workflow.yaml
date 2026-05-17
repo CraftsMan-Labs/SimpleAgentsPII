@@ -1,0 +1,47 @@
+id: pii-redaction-workflow
+version: 1.0.0
+entry_node: redact_chunk
+
+nodes:
+  - id: redact_chunk
+    node_type:
+      llm_call:
+        model: openai/gpt-oss-20b
+        temperature: 0.2
+        messages_path: input.messages
+        append_prompt_as_user: true
+        send_schema: false
+        stream: false
+        heal: false
+    config:
+      output_schema:
+        type: string
+      prompt: |
+        Redact personally identifiable information in the latest user text.
+
+        Rules:
+        1) The input is plain text as-is.
+        2) Return the text EXACTLY word-for-word with no differences, except replacing PII spans.
+        3) Preserve every non-PII character exactly: punctuation, spaces, capitalization, symbols, new lines, empty lines, and markdown/table formatting.
+        4) Do not add, remove, reorder, summarize, or rewrite any text.
+        5) Replace each detected span with one of:
+           <PII_NAME>
+           <PII_PHONE_NUMBER>
+           <PII_EMAIL>
+           <PII_ADDRESS>
+           <PII_DOB>
+           <PII_ID_NUMBER>
+           <PII_BANK_ACCOUNT>
+        10) Use placeholders only where needed.
+        11) Do not merge, split, remove, or insert lines.
+
+        Example (follow this behavior exactly):
+        Input:
+        Invoice owner: Jordan Pike
+        Contact: +1 (212) 555-0190, jordan.pike@acme.test
+
+        Output:
+        Invoice owner: <PII_NAME>
+        Contact: <PII_PHONE_NUMBER>, <PII_EMAIL>
+
+edges: []
